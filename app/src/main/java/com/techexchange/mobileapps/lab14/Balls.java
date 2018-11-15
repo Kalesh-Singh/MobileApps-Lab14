@@ -13,9 +13,9 @@ public class Balls extends View {
 
     private static final float RADIUS = 50.f;
     private static final int NUM_BALLS = 20;
-    private static final float MAX_SPEED = 200.f;
+    private static final float MAX_SPEED = 800.f;
     private static final float MIN_SPEED = 100.f;
-    private static final long DELAY_MS = 300;
+    private static final long DELAY_MS = 5;
     private static final float TIME_STEP = DELAY_MS / 1000.f;
 
     private float screenWidth;
@@ -32,6 +32,7 @@ public class Balls extends View {
 
         if (this.balls != null) {
             drawBalls(canvas);
+            updateBalls();
         }
         try {
             Thread.sleep(DELAY_MS);
@@ -50,6 +51,52 @@ public class Balls extends View {
         this.balls = initializeBalls();
     }
 
+    private void handleCollision(Ball b1, Ball b2) {
+        float depth = RADIUS - (distanceBetweenCenters(b1.center, b2.center) / 2.f);
+        if (b1.center.x > b2.center.x) {
+            b1.center.x += 2 * depth;
+            b2.center.x -= 2 * depth;
+        } else {
+            b1.center.x -= 2 * depth;
+            b2.center.x += 2 * depth;
+        }
+        if (b1.center.y > b2.center.y) {
+            b1.center.y += 2 * depth;
+            b2.center.y -= 2 * depth;
+        } else {
+            b1.center.y -= 2 * depth;
+            b2.center.y += 2 * depth;
+        }
+//        b1.center.y = getYfromX(b1.center, b2.center, b1.center.x);
+//        b2.center.y = getYfromX(b1.center, b2.center, b2.center.x);
+
+        // Swap the speeds of the two balls that collided.
+        Speed temp = b1.speed;
+        b1.speed = b2.speed;
+        b2.speed = temp;
+    }
+
+    private float getYfromX(Center c1, Center c2, float x) {
+        float m = (c1.y - c2.y) / (c1.x - c2.x);        // Gradient
+        return (m * (x - c2.x)) - c2.y;
+    }
+
+    private boolean collides(Ball b1, Ball b2) {
+        return distanceBetweenCenters(b1.center, b2.center) < (2 * RADIUS);
+    }
+
+    private void updateBalls() {
+        for (Ball b1 : balls) {
+            b1.updateCenter();
+            for (Ball b2 : balls) {
+                if (collides(b1, b2)) {
+                    Log.d(TAG, "Collision!");
+                    handleCollision(b1, b2);
+                }
+            }
+        }
+    }
+
     private void drawBalls(Canvas canvas) {
         for (Ball ball : this.balls) {
             ball.draw(canvas);
@@ -60,7 +107,7 @@ public class Balls extends View {
         List<Ball> balls = new ArrayList<>();
         List<Center> centers = getRandomCenters();
         for (Center c : centers) {
-            Ball ball = new Ball(c, randomSpeed(), RADIUS);
+            Ball ball = new Ball(c, randomSpeed(), RADIUS, screenWidth, screenHeight, TIME_STEP);
             balls.add(ball);
         }
         return balls;
