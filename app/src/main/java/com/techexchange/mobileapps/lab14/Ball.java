@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import java.util.Random;
 
 public class Ball {
+    private static final float GRAVITY = 600f;      // An arbitrary value for gravity
     public Center center;
     public Speed speed;
     private float radius;
@@ -28,18 +29,17 @@ public class Ball {
 
     public void updateCenter() {
         center.x += speed.x * timeStep;
-        center.y += speed.y * timeStep;
+        center.y += speed.y * timeStep + (0.5 * GRAVITY * timeStep * timeStep);
+        speed.y += GRAVITY * timeStep;
         if (center.x >= screenWidth - radius) {
             speed.x = -speed.x;
             float depth = center.x + radius - screenWidth;
             center.x = screenWidth - radius - depth;
-//            center.x -= 2 * depth;
         }
         if (center.y >= screenHeight - radius) {
             speed.y = -speed.y;
             float depth = center.y + radius - screenHeight;
             center.y = screenHeight - radius - depth;
-//            center.y -= 2 * depth;
         }
         if (center.x - radius <= 0) {
             speed.x = -speed.x;

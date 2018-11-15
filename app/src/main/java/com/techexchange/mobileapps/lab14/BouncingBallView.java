@@ -49,23 +49,24 @@ public class BouncingBallView extends View {
     private void update() {
         circleX += speedX * TIME_STEP;
         circleY += speedY * TIME_STEP;
+
         if (circleX >= screenWidth - circleR) {
             speedX = -speedX;
             float depth = circleX + circleR - screenWidth;
-            circleX -= 2 * depth;
+            circleX = screenWidth - circleR - depth;
         }
         if (circleY >= screenHeight - circleR) {
             speedY = -speedY;
             float depth = circleY + circleR - screenHeight;
-            circleY -= 2 * depth;
+            circleY = screenHeight - circleR - depth;
         }
-        if (circleX - circleR < 0) {
+        if (circleX - circleR <= 0) {
             speedX = -speedX;
-//            circleX = -circleX;
+            circleX += Math.abs(circleX -circleR);
         }
-        if (circleY - circleR < 0) {
+        if (circleY - circleR <= 0) {
             speedY = -speedY;
-//            circleY = -circleY;
+            circleY += Math.abs(circleY - circleR);
         }
     }
 
