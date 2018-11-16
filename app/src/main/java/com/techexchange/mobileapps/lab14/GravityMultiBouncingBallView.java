@@ -8,13 +8,13 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiBouncingBallView extends View {
+public class GravityMultiBouncingBallView extends View {
     private static final String TAG = "BallsView";
 
     private static final float RADIUS = 50.f;
     private static final int NUM_BALLS = 20;
-    private static final float MAX_SPEED = 800.f;
-    private static final float MIN_SPEED = 100.f;
+    private static final float MAX_SPEED = 500.f;
+    private static final float MIN_SPEED = 200.f;
     private static final long DELAY_MS = 5;
     private static final float TIME_STEP = DELAY_MS / 1000.f;
 
@@ -22,7 +22,7 @@ public class MultiBouncingBallView extends View {
     private float screenHeight;
     private List<Ball> balls;
 
-    public MultiBouncingBallView(Context context) {
+    public GravityMultiBouncingBallView(Context context) {
         super(context);
     }
 

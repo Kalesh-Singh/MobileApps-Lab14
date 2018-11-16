@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import java.util.Random;
 
 public class Ball {
-    private static final float GRAVITY = 600f;      // An arbitrary value for gravity
+    private static final float GRAVITY = 300f;      // An arbitrary value for gravity
     public Center center;
     public Speed speed;
     private float radius;
